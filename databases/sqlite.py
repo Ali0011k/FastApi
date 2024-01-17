@@ -2,8 +2,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from decouple import config
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./db.sqlite3"
+SQLALCHEMY_DATABASE_URL = config("SQLALCHEMY_DATABASE_URL", cast=str)
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
@@ -21,6 +22,7 @@ class User(Base):
     first_name = Column(String)
     last_name = Column(String)
     email = Column(String, unique=True, index=True)
+    username = Column(String, unique=True, index=True)
     password = Column(String)
     is_active = Column(Boolean, default=True)
 
