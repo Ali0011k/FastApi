@@ -27,7 +27,7 @@ def get_db():
         db.close()
 
 
-@router.get("/database/users/", dependencies=[Depends(JWTBearer())])
+@router.get("/database/users/", )
 def all_users(db: Session = Depends(get_db)):
     """get all users from data base"""
 
@@ -39,7 +39,6 @@ def all_users(db: Session = Depends(get_db)):
 @router.get(
     "/database/users/{id}/",
     status_code=200,
-    dependencies=[Depends(JWTBearer())],
 )
 def get_user(id: int, db: Session = Depends(get_db)):
     try:
@@ -58,7 +57,6 @@ def get_user(id: int, db: Session = Depends(get_db)):
 @router.post(
     "/database/users/",
     status_code=201,
-    dependencies=[Depends(JWTBearer())],
 )
 def create_user(
     model: MODELUSER
@@ -85,7 +83,7 @@ def create_user(
     return JSONResponse(content=content, status_code=status.HTTP_201_CREATED)
 
 
-@router.put("/database/users/{id}/", dependencies=[Depends(JWTBearer())])
+@router.put("/database/users/{id}/", )
 def update_user(model: MODELUSER, id: int, db: Session = Depends(get_db)):
     """update all user fields in db"""
 
@@ -116,7 +114,7 @@ def update_user(model: MODELUSER, id: int, db: Session = Depends(get_db)):
     return JSONResponse(content=content, status_code=status.HTTP_200_OK)
 
 
-@router.patch("/database/users/{id}/", dependencies=[Depends(JWTBearer())])
+@router.patch("/database/users/{id}/")
 def partial_update_user(
     id: int, model: MODELUSER = None, db: Session = Depends(get_db)
 ):
@@ -142,7 +140,6 @@ def partial_update_user(
 @router.delete(
     "/database/users/{id}/",
     status_code=status.HTTP_204_NO_CONTENT,
-    dependencies=[Depends(JWTBearer())],
 )
 def delete_user(id: int, db: Session = Depends(get_db)):
     """delete user"""
