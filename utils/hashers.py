@@ -5,7 +5,6 @@ import hashlib
 def hash_password(password: str):
     """hash password that is given"""
 
-    salt = secrets.token_hex(16)
     hashed_password = hashlib.sha256((password).encode("utf-8")).hexdigest()
     return hashed_password
 
