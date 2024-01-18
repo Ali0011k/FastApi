@@ -27,7 +27,9 @@ def get_db():
         db.close()
 
 
-@router.get("/database/users/", )
+@router.get(
+    "/database/users/",
+)
 def all_users(db: Session = Depends(get_db)):
     """get all users from data base"""
 
@@ -83,7 +85,9 @@ def create_user(
     return JSONResponse(content=content, status_code=status.HTTP_201_CREATED)
 
 
-@router.put("/database/users/{id}/", )
+@router.put(
+    "/database/users/{id}/",
+)
 def update_user(model: MODELUSER, id: int, db: Session = Depends(get_db)):
     """update all user fields in db"""
 
