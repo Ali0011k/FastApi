@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  app:
+    image: fastapi
+    container_name: fastapi
+    build:
+      context: .
+      dockerfile: Dockerfile
+    expose:
+      - 8000
+  
+  nginx:
+    image: nginx
+    container_name: nginx
+    depends_on:
+      - app
+    restart: always
+    ports: 
+      - "80:80"
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
