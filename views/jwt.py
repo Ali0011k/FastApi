@@ -11,6 +11,7 @@ from databases.sqlite import SessionLocal
 from databases.sqlite import User as DBUSER
 from auth.jwt import encode_jwt
 from fastapi import APIRouter
+from utils.hashers import verify_password
 
 router = APIRouter()
 
@@ -32,15 +33,12 @@ def access_token(
 ):
     """generate access token for user"""
 
-    USER = (
-        db.query(DBUSER)
-        .filter(DBUSER.username == username, DBUSER.password == password)
-        .first()
-    )
+    USER = db.query(DBUSER).filter(DBUSER.username == username).first()
 
     if USER is not None:
-        token = encode_jwt(jsonable_encoder(USER))
-        content = {"token": token}
-        return JSONResponse(content=content, status_code=status.HTTP_200_OK)
+        if verify_password(password, USER.password):
+            token = encode_jwt(jsonable_encoder(USER))
+            content = {"token": token}
+            return JSONResponse(content=content, status_code=status.HTTP_200_OK)
     content = {"detail": "can't generate token for this informations"}
     return JSONResponse(content=content, status_code=status.HTTP_401_UNAUTHORIZED)

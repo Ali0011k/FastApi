@@ -11,9 +11,8 @@ from models import User as MODELUSER
 from sqlalchemy.orm import Session
 from databases.sqlite import SessionLocal
 from databases.sqlite import User as DBUSER
-from auth.auth import JWTBearer
-from auth.jwt import encode_jwt
 from fastapi import APIRouter
+from utils.hashers import hash_password, verify_password
 
 router = APIRouter()
 
@@ -27,12 +26,18 @@ def get_db():
         db.close()
 
 
-@router.get("/database/users/", )
+@router.get(
+    "/database/users/",
+)
 def all_users(db: Session = Depends(get_db)):
     """get all users from data base"""
 
     users = db.query(DBUSER).all()
-    content = jsonable_encoder(users)
+    return_object = []
+    for user in users:
+        safe_user = SafeUser(**user.__dict__)
+        return_object.append(safe_user)
+    content = jsonable_encoder(return_object)
     return JSONResponse(content=content, status_code=status.HTTP_200_OK)
 
 
@@ -47,6 +52,7 @@ def get_user(id: int, db: Session = Depends(get_db)):
             content = {"detail": "Not Found"}
             return JSONResponse(content=content, status_code=status.HTTP_404_NOT_FOUND)
 
+        user = SafeUser(**user.__dict__)
         content = jsonable_encoder(user)
         return JSONResponse(content=content, status_code=status.HTTP_200_OK)
     except:
@@ -76,14 +82,18 @@ def create_user(
     """create a new user in database"""
 
     db_user = DBUSER(**model.__dict__)
+    db_user.password = hash_password(db_user.password)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    content = {"user": jsonable_encoder(db_user)}
+    return_object = SafeUser(**db_user.__dict__)
+    content = {"user": jsonable_encoder(return_object)}
     return JSONResponse(content=content, status_code=status.HTTP_201_CREATED)
 
 
-@router.put("/database/users/{id}/", )
+@router.put(
+    "/database/users/{id}/",
+)
 def update_user(model: MODELUSER, id: int, db: Session = Depends(get_db)):
     """update all user fields in db"""
 
@@ -98,6 +108,8 @@ def update_user(model: MODELUSER, id: int, db: Session = Depends(get_db)):
         if value is None:
             REQUIRED_FIELDS.routerend(key)
         else:
+            if key == "password":
+                value = hash_password(value)
             setattr(user, key, value)
 
     if REQUIRED_FIELDS.__len__() > 0:
@@ -110,7 +122,8 @@ def update_user(model: MODELUSER, id: int, db: Session = Depends(get_db)):
 
     db.commit()
     db.refresh(user)
-    content = jsonable_encoder(user)
+    return_object = SafeUser(**user.__dict__)
+    content = jsonable_encoder(return_object)
     return JSONResponse(content=content, status_code=status.HTTP_200_OK)
 
 
@@ -128,12 +141,15 @@ def partial_update_user(
 
     for key, value in model.__dict__.items():
         if value is not None:
+            if key == "password":
+                value = hash_password(value)
             setattr(user, key, value)
 
     db.commit()
     db.refresh(user)
 
-    content = jsonable_encoder(user)
+    return_object = SafeUser(**user.__dict__)
+    content = jsonable_encoder(return_object)
     return JSONResponse(content=content, status_code=status.HTTP_200_OK)
 
 
