@@ -8,7 +8,7 @@ router = APIRouter()
 
 
 @router.delete("/delete/{item_id}/")
-def delete_item(item_id: int):
+async def delete_item(item_id: int):
     """delete item from fake db"""
 
     global FAKE_DB

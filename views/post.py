@@ -14,7 +14,7 @@ router = APIRouter()
 
 
 @router.post("/auth/login/")
-def login_form(username: Annotated[str, Form()], password: Annotated[str, Form()]):
+async def login_form(username: Annotated[str, Form()], password: Annotated[str, Form()]):
     """a simple form"""
 
     content = {"username": username, "password": password}
@@ -22,7 +22,7 @@ def login_form(username: Annotated[str, Form()], password: Annotated[str, Form()
 
 
 @router.post("/post/dummy/")
-def post_dummy(
+async def post_dummy(
     model: TestModel
     | None = Body(example={"name": "string", "age": 18, "is_active": False})
 ) -> TestModel:
@@ -33,7 +33,7 @@ def post_dummy(
 
 
 @router.post("/post/uploadfile/")
-def upload_file(file: UploadFile):
+async def upload_file(file: UploadFile):
     """uploading files"""
 
     content = {"filename": file.filename}
@@ -41,7 +41,7 @@ def upload_file(file: UploadFile):
 
 
 @router.post("/handle/exeption/")
-def handle_exeption(key: str):
+async def handle_exeption(key: str):
     """handling some exeptions"""
 
     KEY_LIST = ["testkey", "testkey2", "testkey3"]
@@ -56,7 +56,7 @@ FAKE_DB = {}
 
 
 @router.post("/create/item/", status_code=201)
-def create_item(model: Item):
+async def create_item(model: Item):
     """creating an item in fake db"""
 
     global FAKE_DB

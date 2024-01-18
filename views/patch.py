@@ -8,7 +8,7 @@ router = APIRouter()
 
 
 @router.patch("/update/partial/{item_id}/")
-def partial_update_item(item_id: int, model: Item):
+async def partial_update_item(item_id: int, model: Item):
     """add partial update to item model"""
 
     global FAKE_DB

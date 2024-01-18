@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 @router.put("/update/item/{item_id}/")
-def update_item(item_id: int, model: Item):
+async def update_item(item_id: int, model: Item):
     """update an item with item id"""
 
     global FAKE_DB
