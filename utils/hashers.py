@@ -15,9 +15,3 @@ def verify_password(password, hashed_password):
     hashed_input_password = hashlib.sha256((password).encode("utf-8")).hexdigest()
     print(hashed_input_password)
     return hashed_input_password == hashed_password
-
-
-a = hash_password("test pass")
-print(a)
-b = verify_password("test pass", a)
-print(b)
