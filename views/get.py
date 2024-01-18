@@ -13,7 +13,7 @@ router = APIRouter()
 
 
 @router.get("/")
-def root():
+async def root():
     """returns a hello word for this url"""
 
     content = {"hello": "world"}
@@ -21,7 +21,7 @@ def root():
 
 
 @router.get("/params/{something}/")
-def params(something: int, q: bool = None):
+async def params(something: int, q: bool = None):
     """add an int to path params (!important) like this : params/1/ and add an qury params in url like this : params/1/?q=1(true)(!not imporant)"""
 
     content = {"pathparams": something, "queryparams": q}
@@ -29,7 +29,7 @@ def params(something: int, q: bool = None):
 
 
 @router.get("/query/params/")
-def query_params(q: int = Query(description="query parmas")):
+async def query_params(q: int = Query(description="query parmas")):
     """returning query paramter"""
 
     content = {"page": "/query/params/"}
@@ -40,7 +40,7 @@ def query_params(q: int = Query(description="query parmas")):
 
 
 @router.get("/path/params/{item_id}/")
-def path_params(item_id: int = Path(description="path parmas")):
+async def path_params(item_id: int = Path(description="path parmas")):
     """returning path paramter"""
 
     content = {"page": "/path/params/", "item_id": item_id}
@@ -48,7 +48,7 @@ def path_params(item_id: int = Path(description="path parmas")):
 
 
 @router.get("/path/cookie/params/")
-def cookie_params(q: Annotated[str | None, Cookie()]):
+async def cookie_params(q: Annotated[str | None, Cookie()]):
     """adding cookie params"""
 
     content = {"param": q}
@@ -56,7 +56,7 @@ def cookie_params(q: Annotated[str | None, Cookie()]):
 
 
 @router.get("/path/header/params/")
-def header_params(q: Annotated[str | None, Header()]):
+async def header_params(q: Annotated[str | None, Header()]):
     """adding header params"""
 
     content = {"param": q}

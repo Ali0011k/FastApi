@@ -29,7 +29,7 @@ def get_db():
 @router.get(
     "/database/users/",
 )
-def all_users(db: Session = Depends(get_db)):
+async def all_users(db: Session = Depends(get_db)):
     """get all users from data base"""
 
     users = db.query(DBUSER).all()
@@ -45,7 +45,7 @@ def all_users(db: Session = Depends(get_db)):
     "/database/users/{id}/",
     status_code=200,
 )
-def get_user(id: int, db: Session = Depends(get_db)):
+async def get_user(id: int, db: Session = Depends(get_db)):
     try:
         user = db.query(DBUSER).filter(DBUSER.id == id).first()
         if user is None:
@@ -64,7 +64,7 @@ def get_user(id: int, db: Session = Depends(get_db)):
     "/database/users/",
     status_code=201,
 )
-def create_user(
+async def create_user(
     model: MODELUSER
     | None = Body(
         example={
@@ -94,7 +94,7 @@ def create_user(
 @router.put(
     "/database/users/{id}/",
 )
-def update_user(model: MODELUSER, id: int, db: Session = Depends(get_db)):
+async def update_user(model: MODELUSER, id: int, db: Session = Depends(get_db)):
     """update all user fields in db"""
 
     user = db.query(DBUSER).filter(DBUSER.id == id).first()
@@ -128,7 +128,7 @@ def update_user(model: MODELUSER, id: int, db: Session = Depends(get_db)):
 
 
 @router.patch("/database/users/{id}/")
-def partial_update_user(
+async def partial_update_user(
     id: int, model: MODELUSER = None, db: Session = Depends(get_db)
 ):
     """partial update for user model"""
@@ -157,7 +157,7 @@ def partial_update_user(
     "/database/users/{id}/",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-def delete_user(id: int, db: Session = Depends(get_db)):
+async def delete_user(id: int, db: Session = Depends(get_db)):
     """delete user"""
 
     user = db.query(DBUSER).filter(DBUSER.id == id).first()

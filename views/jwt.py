@@ -26,7 +26,7 @@ def get_db():
 
 
 @router.post("/auth/token/access/")
-def access_token(
+async def access_token(
     username: Annotated[str, Form()],
     password: Annotated[str, Form()],
     db: Session = Depends(get_db),
